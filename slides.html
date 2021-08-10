@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <title>Touchtech Performance Workshop</title>
+  <base target="_blank" />
+  <!--link rel="icon" type="image/png" href="data:image/png;base64,YOUR-FAVICON-HERE"-->
+  <style>
+    body,
+    html {
+      overflow: hidden;
+      font-size: 4vw;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body.loaded {
+      transition: 0.3s;
+    }
+    body.loaded section {
+      transition: opacity 0.5s;
+    }
+    section {
+      position: fixed;
+      top: 1vw;
+      bottom: 1vw;
+      left: 1vw;
+      right: 1vw;
+      opacity: 0;
+    }
+    section:target {
+      z-index: 1;
+    }
+    body:not(.muted) section:target {
+      opacity: 1;
+    }
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+    .incremental:not(.revealed) {
+      visibility: hidden;
+    }
+  </style>
+
+  <style>
+    body.loaded section {
+      transition-property: opacity, left, right;
+    }
+    section:not(:target):not([data-id="last-slide-id"]) {
+      left: -99vw;
+      right: 101vw;
+    }
+    section:target + section:not([data-id="last-slide-id"]) {
+      left: 101vw;
+      right: -99vw;
+    }
+    html,
+    body {
+      color: white;
+      font-family: "Museo Sans 500", "Calibri", sans-serif;
+    }
+    body.loaded {
+      /* default background */
+      background: #2196f3;
+    }
+
+    /* Styling for slide contents */
+    section[data-id="some-slide-id"] {
+      color: black;
+    }
+    section[data-id="box-shadow"] {
+      box-shadow: inset 0 0 10vw rgba(0, 0, 0, 0.2),
+        0 0 1vw rgba(255, 255, 255, 0.5);
+    }
+
+    /* styling for body when given slides are visible */
+    body[data-slide-id="some-slide-id"] {
+      background: #4caf50;
+    }
+    body[data-slide-id="link-id"] {
+      background: #3f51b5;
+    }
+    body[data-slide-id="compat-id"] {
+      background: #263238;
+    }
+    body[data-slide-id="last-slide-id"] {
+      background: #ff5722;
+      transform: scale(1.8);
+    }
+
+    h1 {
+      font-size: 12vw;
+      font-weight: 500;
+      margin: 0;
+      text-shadow: 0 0 1vw rgba(0, 0, 0, 0.1);
+    }
+    a {
+      color: white !important;
+      outline: none !important;
+    }
+    a:hover {
+      color: #fff9c4 !important;
+    }
+    blockquote {
+      background: rgba(0, 0, 0, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.1em;
+      padding: 0.7em 1.5em;
+      font-family: "Museo 300", "Calibri", sans-serif;
+      font-weight: 300;
+      text-indent: -0.4em;
+      margin: 2vw;
+    }
+    p {
+      margin: 2vw;
+    }
+    ul {
+      list-style: inside;
+    }
+    blockquote:before {
+      content: "\00201C";
+    }
+    blockquote:after {
+      content: "\00201D";
+    }
+    img {
+      box-shadow: 0.1vw 0.2vw 1vw rgba(0, 0, 0, 0.7);
+    }
+    table img {
+      box-shadow: none;
+      width: 6vw;
+    }
+
+    /* vertical centering */
+    .centering-wrapper {
+      text-align: center;
+    }
+    .centering-wrapper:before,
+    .centering-wrapper:after {
+      content: "";
+      height: 100%;
+      width: 0;
+      margin: 0 -1em;
+    }
+    .centering-wrapper:before,
+    .centering-wrapper:after,
+    .v-centered {
+      vertical-align: middle;
+      display: inline-block;
+    }
+  </style>
+
+  <!-- each section is a slide -->
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Touchtech Performance Workshop</h1>
+    </div>
+  </section>
+
+  <section>
+    <h2>What will we discuss:</h2>
+    <ul>
+      <li>Performance optimization</li>
+      <li>Chrome DevTools and memory problems</li>
+      <li>React DevTools</li>
+      <li>Optimize context</li>
+      <li>Fix React re-renders</li>
+      <li>React useMemo and useCallback</li>
+      <li>Optimizing big lists</li>
+    </ul>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Performance Optimization</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>RAIL</h1>
+    </div>
+  </section>
+
+  <section>
+    <h2>RAIL:</h2>
+    <ul>
+      <li>Response</li>
+      <li>Animation</li>
+      <li>Idle</li>
+      <li>Load</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>User perception:</h2>
+    <table class="w-table-wrapper">
+      <thead></thead>
+      <tbody>
+        <tr>
+          <td>0&nbsp;to&nbsp;16&nbsp;ms</td>
+          <td>Animation - 60fps (16ms/frame)</td>
+        </tr>
+        <tr>
+          <td>0&nbsp;to&nbsp;100&nbsp;ms</td>
+          <td>Reaction on user events</td>
+        </tr>
+        <tr>
+          <td>100&nbsp;-&nbsp;1000&nbsp;ms&nbsp;&nbsp;</td>
+          <td>Switching a view</td>
+        </tr>
+        <tr>
+          <td>&gt;1000&nbsp;ms</td>
+          <td>Users look focus</td>
+        </tr>
+        <tr>
+          <td>&gt;10000&nbsp;ms</td>
+          <td>Frustration limit</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Response:</h2>
+    <ul>
+      <li>Process events in less than 50ms</li>
+      <li>Provide feedback if an action takes longer</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Animation:</h2>
+    <ul>
+      <li>60 fps</li>
+      <li>Aim for visual smoothness</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Idle:</h2>
+    <ul>
+      <li>Maximise Idle time</li>
+      <li>
+        Use
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+          >requestIdleCallback</a
+        >
+      </li>
+    </ul>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>General optimization strategy</h1>
+    </div>
+  </section>
+
+  <section>
+    <h2>Load:</h2>
+    <ul>
+      <li>Load page in less than 5 seconds</li>
+      <li>2 seconds for subsequent loads</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Memory problems:</h2>
+    <ul>
+      <li>Memory leaks</li>
+      <li>Memory bloat</li>
+      <li>Frequent garbage collection</li>
+    </ul>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Find a memory leak</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Find memory bloat</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Find extra re-renders</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Fix re-renders</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Optimize context</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>useMemo</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Virtualize lists</h1>
+    </div>
+  </section>
+
+  <section class="centering-wrapper">
+    <div class="v-centered">
+      <h1>Performance testing / monitoring</h1>
+    </div>
+  </section>
+
+  <script>
+    ((m, I, n, i, S, l, y, d, e, s, _, R, O, C, K) => {
+      (d = l.body),
+        (s = Array.from(l[i + "All"]("section"))),
+        (K = ($) => {
+          (_ = Math.min(s.length, $ || 1)),
+            (R = s[_ - 1]),
+            s.map.call(R[i + "All"](m), (a) => a[I].remove(S)),
+            (y.hash = _),
+            (d.style.background = R[n].bg || ""),
+            (d[n].slideId = R[n].id || _);
+        }),
+        addEventListener("keydown", (g, o) => {
+          (C = g.which - 32),
+            (C && C - 2 && C - 7 && C - 8) ||
+              ((O = R[i](m + `:not(.${S})`)),
+              O ? O[I].add(S) : K(_ + 1),
+              (o = 1)),
+            (C - 1 && C - 5 && C - 6) || (K(_ - 1), (o = 1)),
+            C + 5 || (d[I].toggle("muted"), (o = 1)),
+            C - 4 || (K(1), (o = 1)),
+            C - 3 || (K(1 / 0), (o = 1)),
+            o && g.preventDefault();
+        }),
+        s.map((a, t) => (a.id = t + 1)),
+        setInterval(
+          (e = (a) => {
+            (a = y.hash.substr(1)), a != _ && K(a);
+          }),
+          99
+        ),
+        e(),
+        d[I].add("loaded");
+    })(
+      ".incremental",
+      "classList",
+      "dataset",
+      "querySelector",
+      "revealed",
+      document,
+      location
+    );
+  </script>
+  <!--
+Copyright 2016 Thomas Rosenau
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+<section class="centering-wrapper">
+    <div class="v-centered">
+        <h1>minislides</h1>
+        <span>The minimal HTML slide presentation framework</span>
+    </div>
+</section>
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--></html>
