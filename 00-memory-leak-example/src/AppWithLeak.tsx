@@ -21,15 +21,14 @@ function App() {
 
   return (
     <>
+      <p>With leak:</p>
       <button onClick={addItem}>Add item</button>
       <button onClick={removeItem}>Remove item</button>
       <ul>
         {items.map((item, i) => (
-          <Fade>
-            <li ref={(el) => memLeakRef.current.push(el)} key={item.id}>
-              Item {i}
-            </li>
-          </Fade>
+          <li ref={(el) => memLeakRef.current.push(el)} key={item.id}>
+            Item {i}
+          </li>
         ))}
       </ul>
     </>

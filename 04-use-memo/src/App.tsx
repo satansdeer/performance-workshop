@@ -9,8 +9,8 @@ function App() {
   const [number, setNumber] = useState(1);
   const [, setInc] = useState(0);
 
-  const factorial = factorialOf(number);
-	// const factorial = useMemo(() => factorialOf(number), [number]);
+  // const factorial = factorialOf(number);
+	const factorial = useMemo(() => factorialOf(number), [number]);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNumber(Number(event.target.value));

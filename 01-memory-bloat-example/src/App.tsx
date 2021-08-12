@@ -6,14 +6,18 @@ import { Card } from "./Card";
 function App() {
   const [mortys, setMortys] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-	const loader = useRef<HTMLDivElement>(null);
+  const loader = useRef<HTMLDivElement>(null);
 
-	const handleObserver = (entities: IntersectionObserverEntry[]) => {
-		const target = entities[0];
-		if (target.isIntersecting) {
-				setPage((p) => p + 1)
-		}
-	}
+  const handleObserver = (entities: IntersectionObserverEntry[]) => {
+    const target = entities[0];
+    if (target.isIntersecting) {
+      setPage((p) => p + 1);
+    }
+  };
+
+  useEffect(() => {
+    setMortys((m) => [...m, ...m]);
+  }, [page]);
 
   useEffect(() => {
     (async () => {
@@ -32,17 +36,15 @@ function App() {
     }
   }, []);
 
-	useEffect(() => {
-		setMortys(m => [...m, ...m])
-	}, [page])
-
   return (
+		<>
     <Container>
       {mortys.map((morty: Morty) => (
-        <Card {...morty} />
+        <Card key={morty.name} {...morty} />
       ))}
       <div ref={loader}>Loading more Mortys...</div>
     </Container>
+		</>
   );
 }
 

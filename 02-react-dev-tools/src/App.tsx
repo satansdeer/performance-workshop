@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 
 type ItemType = {
   text: string;
@@ -20,7 +20,7 @@ type ItemProps = {
   onItemClick: (id: number) => void;
 };
 
-const Item = ({ item, onItemClick }: ItemProps) => {
+const Item = memo(({ item, onItemClick }: ItemProps) => {
   const onClick = () => {
     onItemClick(item.id);
   };
@@ -30,18 +30,18 @@ const Item = ({ item, onItemClick }: ItemProps) => {
       {item.text} <input type="checkbox" checked={item.liked} />
     </li>
   );
-};
+});
 
 function App() {
   const [items, setItems] = useState(DEFAULT_ITEMS);
 
-  const onItemClick = (id: number) => {
+  const onItemClick = useCallback((id: number) => {
     setItems((oldItems) =>
       oldItems.map((oldItem) =>
         oldItem.id === id ? { ...oldItem, liked: !oldItem.liked } : oldItem
       )
     );
-  };
+  }, []);
 
   return (
     <ul>

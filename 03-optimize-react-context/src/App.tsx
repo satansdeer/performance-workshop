@@ -22,7 +22,7 @@ const Item = memo(({ text, id, liked }: ItemProps) => {
 });
 
 const ItemsList = memo(() => {
-  const { items } = useItems();
+  const items = useItems();
 
   return (
     <ul>

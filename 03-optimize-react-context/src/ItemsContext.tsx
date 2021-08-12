@@ -7,12 +7,12 @@ import {
   useMemo,
 } from "react";
 
-type ItemsContextValueType = {
-  items: ItemType[];
-  onItemClick(id: number): void;
-};
+type ItemsContextValueType = ItemType[];
+
+type OnItemClickContextValueType = (id: number) => void
 
 const ItemsContext = createContext({} as ItemsContextValueType);
+const OnItemClickContext = createContext({} as OnItemClickContextValueType);
 
 export type ItemType = {
   text: string;
@@ -40,15 +40,12 @@ export const ItemsProvider: FC = ({ children }) => {
     );
   }, []);
 
-  const value = useMemo(() => ({ items, onItemClick }), [items, onItemClick]);
-
   return (
-    <ItemsContext.Provider value={value}>{children}</ItemsContext.Provider>
+		<OnItemClickContext.Provider value={onItemClick}>
+    	<ItemsContext.Provider value={items}>{children}</ItemsContext.Provider>
+		</OnItemClickContext.Provider>
   );
 };
 
 export const useItems = () => useContext(ItemsContext);
-export const useOnItemClick = () => {
-	const {onItemClick} = useItems()
-	return useMemo(() => onItemClick, [onItemClick])
-}
+export const useOnItemClick = () => useContext(OnItemClickContext);

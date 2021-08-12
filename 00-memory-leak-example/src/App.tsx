@@ -22,8 +22,8 @@ function App() {
       <button onClick={removeItem}>Remove item</button>
       <ul>
         {items.map((item, i) => (
-					<Fade>
-      	    <li key={item.id}>Item {i}</li>
+					<Fade key={item.id}>
+      	    <li>Item {i}</li>
 					</Fade>
         ))}
       </ul>
